@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { validate } = require('uuid');
 
-const app = require('../');
+const app = require('..');
 
 describe('Todos', () => {
   it("should be able to list all user's todo", async () => {
@@ -9,7 +9,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user1'
+        username: 'user1',
       });
 
     const todoDate = new Date();
@@ -18,7 +18,7 @@ describe('Todos', () => {
       .post('/todos')
       .send({
         title: 'test todo',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username);
 
@@ -28,9 +28,9 @@ describe('Todos', () => {
 
     expect(response.body).toEqual(
       expect.arrayContaining([
-        todoResponse.body
+        todoResponse.body,
       ]),
-    )
+    );
   });
 
   it('should be able to create a new todo', async () => {
@@ -38,7 +38,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user2'
+        username: 'user2',
       });
 
     const todoDate = new Date();
@@ -47,7 +47,7 @@ describe('Todos', () => {
       .post('/todos')
       .send({
         title: 'test todo',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username)
       .expect(201);
@@ -55,7 +55,7 @@ describe('Todos', () => {
     expect(response.body).toMatchObject({
       title: 'test todo',
       deadline: todoDate.toISOString(),
-      done: false
+      done: false,
     });
     expect(validate(response.body.id)).toBe(true);
     expect(response.body.created_at).toBeTruthy();
@@ -66,7 +66,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user7'
+        username: 'user7',
       });
 
     const todoDate = new Date();
@@ -75,7 +75,7 @@ describe('Todos', () => {
       .post('/todos')
       .send({
         title: 'test todo',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username);
 
@@ -83,29 +83,30 @@ describe('Todos', () => {
       .put(`/todos/${todoResponse.body.id}`)
       .send({
         title: 'update title',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username);
 
     expect(response.body).toMatchObject({
       title: 'update title',
       deadline: todoDate.toISOString(),
-      done: false
+      done: false,
     });
 
     const getAllTodosResponse = await request(app)
-      .get((`/todos/`))
+      .get(('/todos/'))
       .set('username', userResponse.body.username);
-    
+
     expect(
       getAllTodosResponse.body.find(
-        (todo)=>todo.id === todoResponse.body.id
-      ))
-    .toMatchObject({
-      title: 'update title',
-      deadline: todoDate.toISOString(),
-      done: false
-    });
+        (todo) => todo.id === todoResponse.body.id,
+      ),
+    )
+      .toMatchObject({
+        title: 'update title',
+        deadline: todoDate.toISOString(),
+        done: false,
+      });
   });
 
   it('should not be able to update a non existing todo', async () => {
@@ -113,7 +114,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user8'
+        username: 'user8',
       });
 
     const todoDate = new Date();
@@ -122,7 +123,7 @@ describe('Todos', () => {
       .put('/todos/invalid-todo-id')
       .send({
         title: 'update title',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username)
       .expect(404);
@@ -135,7 +136,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user3'
+        username: 'user3',
       });
 
     const todoDate = new Date();
@@ -144,7 +145,7 @@ describe('Todos', () => {
       .post('/todos')
       .send({
         title: 'test todo',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username);
 
@@ -154,7 +155,7 @@ describe('Todos', () => {
 
     expect(response.body).toMatchObject({
       ...todoResponse.body,
-      done: true
+      done: true,
     });
   });
 
@@ -163,7 +164,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user4'
+        username: 'user4',
       });
 
     const response = await request(app)
@@ -179,7 +180,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user5'
+        username: 'user5',
       });
 
     const todoDate = new Date();
@@ -188,7 +189,7 @@ describe('Todos', () => {
       .post('/todos')
       .send({
         title: 'test todo',
-        deadline: todoDate
+        deadline: todoDate,
       })
       .set('username', userResponse.body.username);
 
@@ -209,7 +210,7 @@ describe('Todos', () => {
       .post('/users')
       .send({
         name: 'John Doe',
-        username: 'user6'
+        username: 'user6',
       });
 
     const response = await request(app)
